@@ -1,11 +1,10 @@
 package oncall.controller;
 
-import java.time.DayOfWeek;
 import java.util.List;
 import java.util.function.Supplier;
 
 import oncall.domain.calendar.OnCallCalendar;
-import oncall.domain.calendar.OnCallDayOfWeek;
+import oncall.domain.oncall.OnCallResult;
 import oncall.exception.ExceptionHandler;
 import oncall.service.Service;
 import oncall.view.input.InputView;
@@ -27,8 +26,7 @@ public class Controller {
 
     public void run() {
         OnCallCalendar calendar = createCalendar();
-        createWeekdayOrder();
-        createHolidayOrder();
+        OnCallResult result = createOrder(calendar);
     }
 
     private OnCallCalendar createCalendar() {
@@ -36,12 +34,10 @@ public class Controller {
         return service.createCalendar(monthAndDayOfWeek);
     }
 
-    private void createWeekdayOrder() {
+    private OnCallResult createOrder(OnCallCalendar calendar) {
         List<String> weekDayOrderNames = inputView.askWeekdayOrder();
-    }
-
-    private void createHolidayOrder() {
         List<String> holidayOrderNames = inputView.askHolidayOrder();
+        return service.createOrder(calendar, weekDayOrderNames, holidayOrderNames);
     }
 
     private <T> T runWithExceptionHandler(Supplier<T> callback) {
