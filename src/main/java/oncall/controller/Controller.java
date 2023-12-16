@@ -24,12 +24,17 @@ public class Controller {
 
     public void run() {
         createCalendar();
+        createWeekdayOrder();
     }
 
     private void createCalendar() {
         List<String> monthAndDayOfWeek = inputView.askMonthAndDayOfWeek();
         String month = monthAndDayOfWeek.get(0);
         String dayOfWeek = monthAndDayOfWeek.get(1);
+    }
+
+    private void createWeekdayOrder() {
+        List<String> weekDayOrderNames = inputView.askWeekdayOrder();
     }
 
     private <T> T runWithExceptionHandler(Supplier<T> callback) {

@@ -11,6 +11,11 @@ public class InputView {
         return split(readLine());
     }
 
+    public List<String> askWeekdayOrder() {
+        System.out.print("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ");
+        return split(readLine());
+    }
+
     private String readLine() {
         return Console.readLine().trim();
     }
