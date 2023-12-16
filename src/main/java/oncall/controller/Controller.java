@@ -1,5 +1,6 @@
 package oncall.controller;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import oncall.exception.ExceptionHandler;
@@ -22,6 +23,13 @@ public class Controller {
     }
 
     public void run() {
+        createCalendar();
+    }
+
+    private void createCalendar() {
+        List<String> monthAndDayOfWeek = inputView.askMonthAndDayOfWeek();
+        String month = monthAndDayOfWeek.get(0);
+        String dayOfWeek = monthAndDayOfWeek.get(1);
     }
 
     private <T> T runWithExceptionHandler(Supplier<T> callback) {
