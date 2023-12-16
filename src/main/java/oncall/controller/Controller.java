@@ -33,10 +33,7 @@ public class Controller {
 
     private OnCallCalendar createCalendar() {
         List<String> monthAndDayOfWeek = inputView.askMonthAndDayOfWeek();
-        int month = Integer.parseInt(monthAndDayOfWeek.get(0));
-        String dayOfWeek = monthAndDayOfWeek.get(1);
-        DayOfWeek startDayOfWeek = OnCallDayOfWeek.findByName(dayOfWeek);
-        return new OnCallCalendar(month, startDayOfWeek);
+        return service.createCalendar(monthAndDayOfWeek);
     }
 
     private void createWeekdayOrder() {
