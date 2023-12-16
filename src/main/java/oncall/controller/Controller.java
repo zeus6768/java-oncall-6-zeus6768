@@ -31,14 +31,20 @@ public class Controller {
     }
 
     private OnCallCalendar createCalendar() {
-        List<String> monthAndDayOfWeek = inputView.askMonthAndDayOfWeek();
-        return service.createCalendar(monthAndDayOfWeek);
+        return runWithExceptionHandler(() -> {
+            List<String> monthAndDayOfWeek = runWithExceptionHandler(inputView::askMonthAndDayOfWeek);
+            return service.createCalendar(monthAndDayOfWeek);
+        });
     }
 
     private OnCallResult createOrder(OnCallCalendar calendar) {
-        List<String> weekDayOrderNames = inputView.askWeekdayOrder();
-        List<String> holidayOrderNames = inputView.askHolidayOrder();
+        List<String> weekDayOrderNames = inputOrder(inputView::askWeekdayOrder);
+        List<String> holidayOrderNames = inputOrder(inputView::askHolidayOrder);
         return service.createOrder(calendar, weekDayOrderNames, holidayOrderNames);
+    }
+
+    private List<String> inputOrder(Supplier<List<String>> orderInputCallback) {
+        return runWithExceptionHandler(() -> service.validateOrderNames(orderInputCallback.get()));
     }
 
     private void printResult(OnCallResult result) {

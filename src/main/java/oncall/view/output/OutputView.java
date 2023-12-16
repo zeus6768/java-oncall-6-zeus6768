@@ -12,7 +12,7 @@ public class OutputView {
                     OnCallDate date = entry.getKey();
                     String name = entry.getValue();
                     System.out.printf(
-                            "%d월 %d일 %s%s %s",
+                            "%d월 %d일 %s%s %s%n",
                             date.getMonth(),
                             date.getDay(),
                             date.getDayOfWeek(),

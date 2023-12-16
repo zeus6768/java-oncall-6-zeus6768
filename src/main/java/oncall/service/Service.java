@@ -29,6 +29,19 @@ public class Service {
         return new OnCallCalendar(month, startDayOfWeek);
     }
 
+    public List<String> validateOrderNames(List<String> names) {
+        if (names.size() <= 5 || names.size() >= 35) {
+            throw new IllegalArgumentException("근무자 수는 5명 이상, 35명 이하로 입력해주세요.");
+        }
+        if ((int) names.stream().distinct().count() != names.size()) {
+            throw new IllegalArgumentException("중복된 닉네임을 입력할 수 없습니다.");
+        }
+        if (names.stream().anyMatch(name -> name.length() > 5)) {
+            throw new IllegalArgumentException("사원 닉네임은 5글자 이하로 입력해주세요.");
+        }
+        return names;
+    }
+
     public OnCallResult createOrder(OnCallCalendar calendar, List<String> weekDayOrderNames,
                                     List<String> holidayOrderNames) {
         List<String> weekdayNames = initNames(weekDayOrderNames);
