@@ -2,7 +2,7 @@ package oncall.domain.calendar;
 
 import java.util.Arrays;
 
-public enum OnCallHoliday {
+public enum GivenHoliday {
 
     NEW_YEAR(1, 1),
     SAMILJEOL(3, 1),
@@ -16,7 +16,7 @@ public enum OnCallHoliday {
     private final int month;
     private final int day;
 
-    OnCallHoliday(int month, int day) {
+    GivenHoliday(int month, int day) {
         this.month = month;
         this.day = day;
     }

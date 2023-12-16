@@ -10,7 +10,7 @@ import oncall.domain.calendar.Month;
 import oncall.domain.calendar.OnCallCalendar;
 import oncall.domain.calendar.OnCallDate;
 import oncall.domain.calendar.OnCallDayOfWeek;
-import oncall.domain.calendar.OnCallHoliday;
+import oncall.domain.calendar.GivenHoliday;
 import oncall.domain.oncall.OnCallResult;
 
 public class Service {
@@ -46,10 +46,10 @@ public class Service {
         int lastDayOfMonth = Month.getLastDayOfMonth(month);
         String prevName = null;
         for (int day = 1; day <= lastDayOfMonth; day++) {
-            boolean isWeekDayAndHoliday = OnCallHoliday.isHoliday(month, day) && calendar.isWeekDay(day);
+            boolean isWeekDayAndHoliday = GivenHoliday.isHoliday(month, day) && calendar.isWeekDay(day);
             OnCallDate date = new OnCallDate(month, day, calendar.getDayOfWeek(day), isWeekDayAndHoliday);
             String name;
-            if (calendar.isWeekEnd(day) || OnCallHoliday.isHoliday(month, day)) {
+            if (calendar.isWeekEnd(day) || GivenHoliday.isHoliday(month, day)) {
                 name = getNextName(holidayNames, prevName);
                 orderResult.put(date, name);
                 prevName = name;
