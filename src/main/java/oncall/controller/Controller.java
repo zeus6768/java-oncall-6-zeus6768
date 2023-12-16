@@ -27,6 +27,7 @@ public class Controller {
     public void run() {
         OnCallCalendar calendar = createCalendar();
         OnCallResult result = createOrder(calendar);
+        printResult(result);
     }
 
     private OnCallCalendar createCalendar() {
@@ -38,6 +39,10 @@ public class Controller {
         List<String> weekDayOrderNames = inputView.askWeekdayOrder();
         List<String> holidayOrderNames = inputView.askHolidayOrder();
         return service.createOrder(calendar, weekDayOrderNames, holidayOrderNames);
+    }
+
+    private void printResult(OnCallResult result) {
+        outputView.printOnCallResult(result);
     }
 
     private <T> T runWithExceptionHandler(Supplier<T> callback) {

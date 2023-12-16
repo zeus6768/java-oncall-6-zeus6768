@@ -20,6 +20,14 @@ public enum OnCallDayOfWeek {
         this.name = name;
     }
 
+    public static String findByDayOfWeek(DayOfWeek dayOfWeek) {
+        return Arrays.stream(values())
+                .filter(day -> day.dayOfWeek.equals(dayOfWeek))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 요일입니다."))
+                .name;
+    }
+
     public static DayOfWeek findByName(String koreanName) {
         return Arrays.stream(values())
                 .filter(dayOfWeek -> dayOfWeek.name.equals(koreanName))

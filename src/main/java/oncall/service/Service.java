@@ -10,6 +10,7 @@ import oncall.domain.calendar.Month;
 import oncall.domain.calendar.OnCallCalendar;
 import oncall.domain.calendar.OnCallDate;
 import oncall.domain.calendar.OnCallDayOfWeek;
+import oncall.domain.calendar.OnCallHoliday;
 import oncall.domain.oncall.OnCallResult;
 import oncall.repository.Repository;
 
@@ -30,29 +31,35 @@ public class Service {
 
     public OnCallResult createOrder(OnCallCalendar calendar, List<String> weekDayOrderNames,
                                     List<String> holidayOrderNames) {
-        List<String> weekdayNames = new ArrayList<>(weekDayOrderNames);
-        weekdayNames.addAll(weekDayOrderNames);
-        List<String> holidayNames = new ArrayList<>(holidayOrderNames);
-        holidayNames.addAll(holidayOrderNames);
+        List<String> weekdayNames = initNames(weekDayOrderNames);
+        List<String> holidayNames = initNames(holidayOrderNames);
 
         Map<OnCallDate, String> orderResult = new LinkedHashMap<>();
 
-        int lastDayOfMonth = Month.getLastDayOfMonth(calendar.getMonth());
+        int month = calendar.getMonth();
+        int lastDayOfMonth = Month.getLastDayOfMonth(month);
         String prevName = null;
         for (int day = 1; day <= lastDayOfMonth; day++) {
-            OnCallDate date = new OnCallDate(calendar.getMonth(), day);
+            OnCallDate date = new OnCallDate(month, day, calendar.getDayOfWeek(day), OnCallHoliday.isHoliday(month, day));
             String name = null;
             if (calendar.isWeekDay(day)) {
                 name = getNextName(weekdayNames, prevName);
-                orderResult.put(date, name);
             }
             if (calendar.isHoliday(day)) {
                 name = getNextName(holidayNames, prevName);
-                orderResult.put(date, name);
             }
+            orderResult.put(date, name);
             prevName = name;
         }
         return new OnCallResult(orderResult);
+    }
+
+    private List<String> initNames(List<String> names) {
+        List<String> result = new ArrayList<>();
+        while (result.size() < 30) {
+            result.addAll(names);
+        }
+        return result;
     }
 
     private String getNextName(List<String> names, String prevName) {
