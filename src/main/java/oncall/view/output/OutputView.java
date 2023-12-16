@@ -22,7 +22,7 @@ public class OutputView {
     }
 
     private String getHolidayMessage(OnCallDate date) {
-        if (date.isHoliday()) {
+        if (date.isWeekDayAndHoliday()) {
             return "(휴일)";
         }
         return "";

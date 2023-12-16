@@ -7,13 +7,13 @@ public class OnCallDate {
     private final int month;
     private final int day;
     private final DayOfWeek dayOfWeek;
-    private final boolean isHoliday;
+    private final boolean isWeekDayAndHoliday;
 
-    public OnCallDate(int month, int day, DayOfWeek dayOfWeek, boolean isHoliday) {
+    public OnCallDate(int month, int day, DayOfWeek dayOfWeek, boolean isWeekDayAndHoliday) {
         this.month = month;
         this.day = day;
         this.dayOfWeek = dayOfWeek;
-        this.isHoliday = isHoliday;
+        this.isWeekDayAndHoliday = isWeekDayAndHoliday;
     }
 
     public int getMonth() {
@@ -28,7 +28,7 @@ public class OnCallDate {
         return OnCallDayOfWeek.findByDayOfWeek(dayOfWeek);
     }
 
-    public boolean isHoliday() {
-        return isHoliday;
+    public boolean isWeekDayAndHoliday() {
+        return isWeekDayAndHoliday;
     }
 }

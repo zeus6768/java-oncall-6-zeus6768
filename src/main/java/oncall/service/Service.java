@@ -46,16 +46,20 @@ public class Service {
         int lastDayOfMonth = Month.getLastDayOfMonth(month);
         String prevName = null;
         for (int day = 1; day <= lastDayOfMonth; day++) {
-            OnCallDate date = new OnCallDate(month, day, calendar.getDayOfWeek(day), OnCallHoliday.isHoliday(month, day));
-            String name = null;
+            boolean isWeekDayAndHoliday = OnCallHoliday.isHoliday(month, day) && calendar.isWeekDay(day);
+            OnCallDate date = new OnCallDate(month, day, calendar.getDayOfWeek(day), isWeekDayAndHoliday);
+            String name;
+            if (calendar.isWeekEnd(day) || OnCallHoliday.isHoliday(month, day)) {
+                name = getNextName(holidayNames, prevName);
+                orderResult.put(date, name);
+                prevName = name;
+                continue;
+            }
             if (calendar.isWeekDay(day)) {
                 name = getNextName(weekdayNames, prevName);
+                orderResult.put(date, name);
+                prevName = name;
             }
-            if (calendar.isHoliday(day)) {
-                name = getNextName(holidayNames, prevName);
-            }
-            orderResult.put(date, name);
-            prevName = name;
         }
         return new OnCallResult(orderResult);
     }

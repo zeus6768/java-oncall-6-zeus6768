@@ -9,12 +9,12 @@ public class OnCallCalendar {
 
     private final int month;
     private final List<OnCallDay> weekdays;
-    private final List<OnCallDay> holidays;
+    private final List<OnCallDay> weekends;
 
     public OnCallCalendar(int month, DayOfWeek startDay) {
         this.month = month;
         this.weekdays = new ArrayList<>();
-        this.holidays = new ArrayList<>();
+        this.weekends = new ArrayList<>();
         initialize(startDay);
     }
 
@@ -23,8 +23,8 @@ public class OnCallCalendar {
         int currentDayOfWeek = startDay.getValue();
         for (int i = 1; i <= lastDayOfMonth; i++) {
             OnCallDay onCallDay = new OnCallDay(month, i, DayOfWeek.of(currentDayOfWeek));
-            if (isGivenHoliday(currentDayOfWeek, i)) {
-                holidays.add(onCallDay);
+            if (isWeekend(currentDayOfWeek)) {
+                weekends.add(onCallDay);
                 currentDayOfWeek = (currentDayOfWeek % 7) + 1;
                 continue;
             }
@@ -33,15 +33,14 @@ public class OnCallCalendar {
         }
     }
 
-    private boolean isGivenHoliday(int currentDayOfWeek, int absoluteDay) {
+    private boolean isWeekend(int currentDayOfWeek) {
         return currentDayOfWeek == DayOfWeek.SATURDAY.getValue()
-                || currentDayOfWeek == DayOfWeek.SUNDAY.getValue()
-                || OnCallHoliday.isHoliday(month, absoluteDay);
+                || currentDayOfWeek == DayOfWeek.SUNDAY.getValue();
     }
 
     public DayOfWeek getDayOfWeek(int day) {
         List<OnCallDay> days = new ArrayList<>(weekdays);
-        days.addAll(holidays);
+        days.addAll(weekends);
         return days.stream()
                 .filter(onCallDay -> onCallDay.day() == day)
                 .findFirst()
@@ -54,9 +53,9 @@ public class OnCallCalendar {
                 .anyMatch(weekday -> weekday.day() == day);
     }
 
-    public boolean isHoliday(int day) {
-        return holidays.stream()
-                .anyMatch(holiday -> holiday.day() == day);
+    public boolean isWeekEnd(int day) {
+        return weekends.stream()
+                .anyMatch(weekday -> weekday.day() == day);
     }
 
     public int getMonth() {
@@ -65,9 +64,5 @@ public class OnCallCalendar {
 
     public List<OnCallDay> getWeekdays() {
         return Collections.unmodifiableList(weekdays);
-    }
-
-    public List<OnCallDay> getHolidays() {
-        return Collections.unmodifiableList(holidays);
     }
 }
