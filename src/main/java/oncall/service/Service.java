@@ -23,7 +23,7 @@ public class Service {
     }
 
     public List<String> validateOrderNames(List<String> names) {
-        if (names.size() <= 5 || names.size() >= 35) {
+        if (names.size() <= 5 || names.size() > 35) {
             throw new IllegalArgumentException("근무자 수는 5명 이상, 35명 이하로 입력해주세요.");
         }
         if ((int) names.stream().distinct().count() != names.size()) {
