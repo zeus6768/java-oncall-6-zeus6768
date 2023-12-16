@@ -1,6 +1,5 @@
 package oncall.config;
 
-import oncall.repository.Repository;
 import oncall.controller.Controller;
 import oncall.exception.ExceptionHandler;
 import oncall.service.Service;
@@ -13,7 +12,6 @@ public class Config {
 
     private Controller controller;
     private Service service;
-    private Repository repository;
     private InputView inputView;
     private OutputView outputView;
     private ExceptionHandler exceptionHandler;
@@ -41,16 +39,9 @@ public class Config {
 
     public Service service() {
         if (service == null) {
-            service = new Service(repository());
+            service = new Service();
         }
         return service;
-    }
-
-    public Repository repository() {
-        if (repository == null) {
-            repository = new Repository();
-        }
-        return repository;
     }
 
     public InputView inputView() {

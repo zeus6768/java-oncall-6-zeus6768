@@ -12,15 +12,8 @@ import oncall.domain.calendar.OnCallDate;
 import oncall.domain.calendar.OnCallDayOfWeek;
 import oncall.domain.calendar.OnCallHoliday;
 import oncall.domain.oncall.OnCallResult;
-import oncall.repository.Repository;
 
 public class Service {
-
-    private final Repository repository;
-
-    public Service(Repository repository) {
-        this.repository = repository;
-    }
 
     public OnCallCalendar createCalendar(List<String> monthAndDayOfWeek) {
         int month = Integer.parseInt(monthAndDayOfWeek.get(0));
