@@ -25,6 +25,7 @@ public class Controller {
     public void run() {
         createCalendar();
         createWeekdayOrder();
+        createHolidayOrder();
     }
 
     private void createCalendar() {
@@ -35,6 +36,10 @@ public class Controller {
 
     private void createWeekdayOrder() {
         List<String> weekDayOrderNames = inputView.askWeekdayOrder();
+    }
+
+    private void createHolidayOrder() {
+        List<String> holidayOrderNames = inputView.askHolidayOrder();
     }
 
     private <T> T runWithExceptionHandler(Supplier<T> callback) {
