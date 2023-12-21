@@ -17,8 +17,8 @@
 # 리팩토링
 
 - [ ] service layer
-  - [ ] 근무자 이름 입력 검증 로직 분리 `validateOrderNames()`
-    - [ ] `Crew`, `Crews` 클래스 생성
+  - [X] 근무자 이름 입력 검증 로직 분리 `validateOrderNames()`
+    - [X] `Crew`, `Crews` 클래스 생성
   - [ ] 비상근무표 생성 로직 분리 `createOrder()`
     - [ ] 근무자 배정 로직 수정
       - 문제점
