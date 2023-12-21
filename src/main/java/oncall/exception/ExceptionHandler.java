@@ -1,5 +1,6 @@
 package oncall.exception;
 
+import java.time.DateTimeException;
 import java.util.function.Supplier;
 
 public class ExceptionHandler {
@@ -11,7 +12,7 @@ public class ExceptionHandler {
         while (true) {
             try {
                 return callback.get();
-            } catch (NumberFormatException exception) {
+            } catch (NumberFormatException | DateTimeException exception) {
                 System.out.printf("%s%s%n%n", ERROR, INPUT_ERROR);
             } catch (IllegalArgumentException exception) {
                 System.out.printf("%s%s%n%n", ERROR, exception.getMessage());

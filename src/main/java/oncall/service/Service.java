@@ -1,26 +1,25 @@
 package oncall.service;
 
 import java.time.DayOfWeek;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import oncall.domain.calendar.Month;
 import oncall.domain.calendar.OnCallCalendar;
 import oncall.domain.calendar.OnCallDate;
 import oncall.domain.calendar.OnCallDayOfWeek;
-import oncall.domain.calendar.GivenHoliday;
 import oncall.domain.crew.Crew;
 import oncall.domain.crew.Crews;
-import oncall.domain.oncall.OnCallResult;
+import oncall.domain.oncall.OnCallList;
 
 public class Service {
 
     public OnCallCalendar createCalendar(List<String> monthAndDayOfWeek) {
-        int month = Integer.parseInt(monthAndDayOfWeek.get(0));
+        Month month = Month.of(Integer.parseInt(monthAndDayOfWeek.get(0)));
         String dayOfWeek = monthAndDayOfWeek.get(1);
-        DayOfWeek startDayOfWeek = OnCallDayOfWeek.findByName(dayOfWeek);
+        DayOfWeek startDayOfWeek = OnCallDayOfWeek.findDayOfWeekByName(dayOfWeek);
         return new OnCallCalendar(month, startDayOfWeek);
     }
 
@@ -29,36 +28,33 @@ public class Service {
         return new Crews(crews);
     }
 
-    public OnCallResult createOrder(OnCallCalendar calendar, Crews weekdayCrews, Crews holidayCrews) {
-        List<String> weekdayNames = initNames(weekdayCrews);
-        List<String> holidayNames = initNames(holidayCrews);
+    public OnCallList createOnCallList(OnCallCalendar calendar, Crews weekdayCrews, Crews holidayCrews) {
+        List<String> weekdayNames = getNames(weekdayCrews);
+        List<String> holidayNames = getNames(holidayCrews);
 
         Map<OnCallDate, String> orderResult = new LinkedHashMap<>();
 
-        int month = calendar.getMonth();
-        int lastDayOfMonth = Month.getLastDayOfMonth(month);
         String prevName = null;
-        for (int day = 1; day <= lastDayOfMonth; day++) {
-            boolean isWeekDayAndHoliday = GivenHoliday.isHoliday(month, day) && calendar.isWeekDay(day);
-            OnCallDate date = new OnCallDate(month, day, calendar.getDayOfWeek(day), isWeekDayAndHoliday);
+
+        for (OnCallDate onCallDate : calendar.getOnCallDates()) {
             String name;
-            if (calendar.isWeekEnd(day) || GivenHoliday.isHoliday(month, day)) {
+            if (onCallDate.isWeekend() || onCallDate.isWeekdayAndHoliday()) {
                 name = getNextName(holidayNames, prevName);
-                orderResult.put(date, name);
+                orderResult.put(onCallDate, name);
                 prevName = name;
                 continue;
             }
-            if (calendar.isWeekDay(day)) {
+            if (onCallDate.isWeekday()) {
                 name = getNextName(weekdayNames, prevName);
-                orderResult.put(date, name);
+                orderResult.put(onCallDate, name);
                 prevName = name;
             }
         }
-        return new OnCallResult(orderResult);
+        return new OnCallList(orderResult);
     }
 
-    private List<String> initNames(Crews crews) {
-        List<String> crewNames = crews.crews().stream().map(Crew::name).toList();
+    private List<String> getNames(Crews crews) {
+        List<String> crewNames = crews.stream().map(Crew::name).toList();
         List<String> result = new ArrayList<>();
         while (result.size() < 30) {
             result.addAll(crewNames);

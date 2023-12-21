@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import oncall.domain.calendar.OnCallCalendar;
 import oncall.domain.crew.Crews;
-import oncall.domain.oncall.OnCallResult;
+import oncall.domain.oncall.OnCallList;
 import oncall.exception.ExceptionHandler;
 import oncall.service.Service;
 import oncall.view.input.InputView;
@@ -27,8 +27,8 @@ public class Controller {
 
     public void run() {
         OnCallCalendar calendar = createCalendar();
-        OnCallResult result = createOrder(calendar);
-        printResult(result);
+        OnCallList result = createOnCallList(calendar);
+        printOnCallList(result);
     }
 
     private OnCallCalendar createCalendar() {
@@ -38,10 +38,10 @@ public class Controller {
         });
     }
 
-    private OnCallResult createOrder(OnCallCalendar calendar) {
+    private OnCallList createOnCallList(OnCallCalendar calendar) {
         Crews weekdayCrews = createCrews(inputView::askWeekdayOrder);
         Crews holidayCrews = createCrews(inputView::askHolidayOrder);
-        return service.createOrder(calendar, weekdayCrews, holidayCrews);
+        return service.createOnCallList(calendar, weekdayCrews, holidayCrews);
     }
 
     private Crews createCrews(Supplier<List<String>> orderInputCallback) {
@@ -51,8 +51,8 @@ public class Controller {
         });
     }
 
-    private void printResult(OnCallResult result) {
-        outputView.printOnCallResult(result);
+    private void printOnCallList(OnCallList result) {
+        outputView.printOnCallList(result);
     }
 
     private <T> T runWithExceptionHandler(Supplier<T> callback) {

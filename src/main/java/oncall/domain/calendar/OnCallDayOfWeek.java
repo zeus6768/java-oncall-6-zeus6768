@@ -20,7 +20,7 @@ public enum OnCallDayOfWeek {
         this.name = name;
     }
 
-    public static String findByDayOfWeek(DayOfWeek dayOfWeek) {
+    public static String findNameByDayOfWeek(DayOfWeek dayOfWeek) {
         return Arrays.stream(values())
                 .filter(day -> day.dayOfWeek.equals(dayOfWeek))
                 .findFirst()
@@ -28,9 +28,9 @@ public enum OnCallDayOfWeek {
                 .name;
     }
 
-    public static DayOfWeek findByName(String koreanName) {
+    public static DayOfWeek findDayOfWeekByName(String name) {
         return Arrays.stream(values())
-                .filter(dayOfWeek -> dayOfWeek.name.equals(koreanName))
+                .filter(dayOfWeek -> dayOfWeek.name.equals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 요일입니다."))
                 .dayOfWeek;

@@ -1,13 +1,16 @@
 package oncall.domain.crew;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-public record Crews(List<Crew> crews) {
+public class Crews {
 
-    public Crews {
+    private final List<Crew> crews;
+
+    public Crews(List<Crew> crews) {
         validateSize(crews);
         validateNotDuplicated(crews);
+        this.crews = crews;
     }
 
     private void validateSize(List<Crew> crews) {
@@ -22,8 +25,7 @@ public record Crews(List<Crew> crews) {
         }
     }
 
-    @Override
-    public List<Crew> crews() {
-        return Collections.unmodifiableList(crews);
+    public Stream<Crew> stream() {
+        return crews.stream();
     }
 }

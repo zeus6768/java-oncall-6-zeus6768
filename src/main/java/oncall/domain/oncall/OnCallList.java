@@ -6,15 +6,15 @@ import java.util.stream.Stream;
 
 import oncall.domain.calendar.OnCallDate;
 
-public class OnCallResult {
+public class OnCallList {
 
-    private final Map<OnCallDate, String> result;
+    private final Map<OnCallDate, String> onCallList;
 
-    public OnCallResult(Map<OnCallDate, String> result) {
-        this.result = result;
+    public OnCallList(Map<OnCallDate, String> onCallList) {
+        this.onCallList = onCallList;
     }
 
     public Stream<Entry<OnCallDate, String>> entryStream() {
-        return result.entrySet().stream();
+        return onCallList.entrySet().stream();
     }
 }

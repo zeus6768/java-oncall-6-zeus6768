@@ -1,34 +1,17 @@
 package oncall.domain.calendar;
 
+import static oncall.domain.calendar.OnCallCalendar.WEEKEND_DAY_OF_WEEKS;
+
 import java.time.DayOfWeek;
+import java.time.Month;
 
-public class OnCallDate {
+public record OnCallDate(Month month, int day, DayOfWeek dayOfWeek, boolean isWeekdayAndHoliday) {
 
-    private final int month;
-    private final int day;
-    private final DayOfWeek dayOfWeek;
-    private final boolean isWeekDayAndHoliday;
-
-    public OnCallDate(int month, int day, DayOfWeek dayOfWeek, boolean isWeekDayAndHoliday) {
-        this.month = month;
-        this.day = day;
-        this.dayOfWeek = dayOfWeek;
-        this.isWeekDayAndHoliday = isWeekDayAndHoliday;
+    public boolean isWeekday() {
+        return !isWeekend();
     }
 
-    public int getMonth() {
-        return month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public String getDayOfWeek() {
-        return OnCallDayOfWeek.findByDayOfWeek(dayOfWeek);
-    }
-
-    public boolean isWeekDayAndHoliday() {
-        return isWeekDayAndHoliday;
+    public boolean isWeekend() {
+        return WEEKEND_DAY_OF_WEEKS.contains(dayOfWeek);
     }
 }
