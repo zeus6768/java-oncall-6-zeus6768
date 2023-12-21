@@ -29,26 +29,14 @@ public class Service {
     }
 
     public OnCallList createOnCallList(OnCallCalendar calendar, Crews weekdayCrews, Crews holidayCrews) {
-        List<Crew> weekdayCrewWithReplacement = getCrewsWithReplacement(weekdayCrews, calendar.countWeekdays());
-        List<Crew> holidayCrewWithReplacement = getCrewsWithReplacement(holidayCrews, calendar.countWeekends());
-
+        List<Crew> weekdayOnCallCrews = getCrewsWithReplacement(weekdayCrews, calendar.countWeekdaysExceptHolidays());
+        List<Crew> holidayOnCallCrews = getCrewsWithReplacement(holidayCrews, calendar.countHolidays());
         Map<OnCallDate, Crew> orderResult = new LinkedHashMap<>();
-
         Crew previousCrew = null;
-
         for (OnCallDate onCallDate : calendar.getOnCallDates()) {
-            Crew crew;
-            if (onCallDate.isWeekend() || onCallDate.isWeekdayAndHoliday()) {
-                crew = getNextCrew(holidayCrewWithReplacement, previousCrew);
-                orderResult.put(onCallDate, crew);
-                previousCrew = crew;
-                continue;
-            }
-            if (onCallDate.isWeekday()) {
-                crew = getNextCrew(weekdayCrewWithReplacement, previousCrew);
-                orderResult.put(onCallDate, crew);
-                previousCrew = crew;
-            }
+            Crew crew = getCrewForDate(onCallDate, weekdayOnCallCrews, holidayOnCallCrews, previousCrew);
+            orderResult.put(onCallDate, crew);
+            previousCrew = crew;
         }
         return new OnCallList(orderResult);
     }
@@ -62,6 +50,13 @@ public class Service {
             index = (index + 1) % crews.size();
         }
         return result;
+    }
+
+    private Crew getCrewForDate(OnCallDate onCallDate, List<Crew> weekdayCrews, List<Crew> holidayCrews, Crew previousCrew) {
+        if (onCallDate.isWeekend() || onCallDate.isWeekdayAndHoliday()) {
+            return getNextCrew(holidayCrews, previousCrew);
+        }
+        return getNextCrew(weekdayCrews, previousCrew);
     }
 
     private Crew getNextCrew(List<Crew> crews, Crew previousCrew) {

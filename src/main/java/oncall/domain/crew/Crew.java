@@ -11,4 +11,9 @@ public record Crew(String name) {
             throw new IllegalArgumentException("사원 닉네임은 5글자 이하로 입력해주세요.");
         }
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
