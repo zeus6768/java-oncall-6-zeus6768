@@ -18,9 +18,8 @@ public class Service {
 
     public OnCallCalendar createCalendar(List<String> monthAndDayOfWeek) {
         Month month = Month.of(Integer.parseInt(monthAndDayOfWeek.get(0)));
-        String dayOfWeek = monthAndDayOfWeek.get(1);
-        DayOfWeek startDayOfWeek = OnCallDayOfWeek.findDayOfWeekByName(dayOfWeek);
-        return new OnCallCalendar(month, startDayOfWeek);
+        DayOfWeek dayOfWeek = OnCallDayOfWeek.findDayOfWeekByName(monthAndDayOfWeek.get(1));
+        return new OnCallCalendar(month, dayOfWeek);
     }
 
     public Crews createCrews(List<String> crewNames) {
