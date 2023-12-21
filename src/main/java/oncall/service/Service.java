@@ -11,6 +11,8 @@ import oncall.domain.calendar.OnCallCalendar;
 import oncall.domain.calendar.OnCallDate;
 import oncall.domain.calendar.OnCallDayOfWeek;
 import oncall.domain.calendar.GivenHoliday;
+import oncall.domain.crew.Crew;
+import oncall.domain.crew.Crews;
 import oncall.domain.oncall.OnCallResult;
 
 public class Service {
@@ -22,23 +24,14 @@ public class Service {
         return new OnCallCalendar(month, startDayOfWeek);
     }
 
-    public List<String> validateOrderNames(List<String> names) {
-        if (names.size() <= 5 || names.size() > 35) {
-            throw new IllegalArgumentException("근무자 수는 5명 이상, 35명 이하로 입력해주세요.");
-        }
-        if ((int) names.stream().distinct().count() != names.size()) {
-            throw new IllegalArgumentException("중복된 닉네임을 입력할 수 없습니다.");
-        }
-        if (names.stream().anyMatch(name -> name.length() > 5)) {
-            throw new IllegalArgumentException("사원 닉네임은 5글자 이하로 입력해주세요.");
-        }
-        return names;
+    public Crews createCrews(List<String> crewNames) {
+        List<Crew> crews = crewNames.stream().map(Crew::new).toList();
+        return new Crews(crews);
     }
 
-    public OnCallResult createOrder(OnCallCalendar calendar, List<String> weekDayOrderNames,
-                                    List<String> holidayOrderNames) {
-        List<String> weekdayNames = initNames(weekDayOrderNames);
-        List<String> holidayNames = initNames(holidayOrderNames);
+    public OnCallResult createOrder(OnCallCalendar calendar, Crews weekdayCrews, Crews holidayCrews) {
+        List<String> weekdayNames = initNames(weekdayCrews);
+        List<String> holidayNames = initNames(holidayCrews);
 
         Map<OnCallDate, String> orderResult = new LinkedHashMap<>();
 
@@ -64,10 +57,11 @@ public class Service {
         return new OnCallResult(orderResult);
     }
 
-    private List<String> initNames(List<String> names) {
+    private List<String> initNames(Crews crews) {
+        List<String> crewNames = crews.crews().stream().map(Crew::name).toList();
         List<String> result = new ArrayList<>();
         while (result.size() < 30) {
-            result.addAll(names);
+            result.addAll(crewNames);
         }
         return result;
     }

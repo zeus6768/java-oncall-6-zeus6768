@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import oncall.domain.calendar.OnCallCalendar;
+import oncall.domain.crew.Crews;
 import oncall.domain.oncall.OnCallResult;
 import oncall.exception.ExceptionHandler;
 import oncall.service.Service;
@@ -38,13 +39,16 @@ public class Controller {
     }
 
     private OnCallResult createOrder(OnCallCalendar calendar) {
-        List<String> weekDayOrderNames = inputOrder(inputView::askWeekdayOrder);
-        List<String> holidayOrderNames = inputOrder(inputView::askHolidayOrder);
-        return service.createOrder(calendar, weekDayOrderNames, holidayOrderNames);
+        Crews weekdayCrews = createCrews(inputView::askWeekdayOrder);
+        Crews holidayCrews = createCrews(inputView::askHolidayOrder);
+        return service.createOrder(calendar, weekdayCrews, holidayCrews);
     }
 
-    private List<String> inputOrder(Supplier<List<String>> orderInputCallback) {
-        return runWithExceptionHandler(() -> service.validateOrderNames(orderInputCallback.get()));
+    private Crews createCrews(Supplier<List<String>> orderInputCallback) {
+        return runWithExceptionHandler(() -> {
+            List<String> names = orderInputCallback.get();
+            return service.createCrews(names);
+        });
     }
 
     private void printResult(OnCallResult result) {
