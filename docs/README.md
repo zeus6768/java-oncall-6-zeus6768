@@ -33,7 +33,7 @@
       - 해결
         - 인덱스를 포인터로 가리키며 근무자를 리턴하도록 변경. 
         - 삭제와 스왑을 리스트에서 직접 하는 대신, 인덱스 포인터의 값만 바꿔주며 구현. 
-    - [ ] 공휴일 enum을 `OnCallCalendar`로 병합
+    - [X] 공휴일 enum을 `OnCallCalendar`로 병합
       - 문제점
         - 날짜 관련 책임이 `GivenHoliday`, `OnCallCalendar`로 불필요하게 나뉘어 있음.
       - 해결
