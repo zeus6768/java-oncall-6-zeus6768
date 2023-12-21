@@ -34,6 +34,14 @@ public class OnCallCalendar {
         return !WEEKEND_DAY_OF_WEEKS.contains(dayOfWeek) && Holiday.isHoliday(month, day);
     }
 
+    public int countWeekdays() {
+        return (int) onCallDates.stream().filter(OnCallDate::isWeekday).count();
+    }
+
+    public int countWeekends() {
+        return (int) onCallDates.stream().filter(OnCallDate::isWeekend).count();
+    }
+
     public List<OnCallDate> getOnCallDates() {
         return Collections.unmodifiableList(onCallDates);
     }

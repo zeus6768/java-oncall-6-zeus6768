@@ -1,7 +1,6 @@
 package oncall.domain.crew;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Crews {
 
@@ -25,7 +24,11 @@ public class Crews {
         }
     }
 
-    public Stream<Crew> stream() {
-        return crews.stream();
+    public Crew get(int index) {
+        return crews.get(index);
+    }
+
+    public int size() {
+        return crews.size();
     }
 }

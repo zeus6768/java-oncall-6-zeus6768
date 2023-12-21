@@ -2,6 +2,7 @@ package oncall.view.output;
 
 import oncall.domain.calendar.OnCallDate;
 import oncall.domain.calendar.OnCallDayOfWeek;
+import oncall.domain.crew.Crew;
 import oncall.domain.oncall.OnCallList;
 
 public class OutputView {
@@ -11,19 +12,19 @@ public class OutputView {
         result.entryStream()
                 .forEach(entry -> {
                     OnCallDate onCallDate = entry.getKey();
-                    String name = entry.getValue();
-                    printOnCallDate(onCallDate, name);
+                    Crew crew = entry.getValue();
+                    printOnCallDate(onCallDate, crew);
                 });
     }
 
-    private void printOnCallDate(OnCallDate onCallDate, String name) {
+    private void printOnCallDate(OnCallDate onCallDate, Crew crew) {
         System.out.printf(
                 "%d월 %d일 %s%s %s%n",
                 onCallDate.month().getValue(),
                 onCallDate.day(),
                 getDayOfWeekMessage(onCallDate),
                 getHolidayMessage(onCallDate),
-                name
+                crew.name()
         );
     }
 

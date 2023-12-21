@@ -29,53 +29,55 @@ public class Service {
     }
 
     public OnCallList createOnCallList(OnCallCalendar calendar, Crews weekdayCrews, Crews holidayCrews) {
-        List<String> weekdayNames = getNames(weekdayCrews);
-        List<String> holidayNames = getNames(holidayCrews);
+        List<Crew> weekdayCrewWithReplacement = getCrewsWithReplacement(weekdayCrews, calendar.countWeekdays());
+        List<Crew> holidayCrewWithReplacement = getCrewsWithReplacement(holidayCrews, calendar.countWeekends());
 
-        Map<OnCallDate, String> orderResult = new LinkedHashMap<>();
+        Map<OnCallDate, Crew> orderResult = new LinkedHashMap<>();
 
-        String prevName = null;
+        Crew previousCrew = null;
 
         for (OnCallDate onCallDate : calendar.getOnCallDates()) {
-            String name;
+            Crew crew;
             if (onCallDate.isWeekend() || onCallDate.isWeekdayAndHoliday()) {
-                name = getNextName(holidayNames, prevName);
-                orderResult.put(onCallDate, name);
-                prevName = name;
+                crew = getNextCrew(holidayCrewWithReplacement, previousCrew);
+                orderResult.put(onCallDate, crew);
+                previousCrew = crew;
                 continue;
             }
             if (onCallDate.isWeekday()) {
-                name = getNextName(weekdayNames, prevName);
-                orderResult.put(onCallDate, name);
-                prevName = name;
+                crew = getNextCrew(weekdayCrewWithReplacement, previousCrew);
+                orderResult.put(onCallDate, crew);
+                previousCrew = crew;
             }
         }
         return new OnCallList(orderResult);
     }
 
-    private List<String> getNames(Crews crews) {
-        List<String> crewNames = crews.stream().map(Crew::name).toList();
-        List<String> result = new ArrayList<>();
-        while (result.size() < 30) {
-            result.addAll(crewNames);
+    private List<Crew> getCrewsWithReplacement(Crews crews, int size) {
+        List<Crew> result = new ArrayList<>();
+        int index = 0;
+        while (result.size() < size) {
+            Crew crew = crews.get(index);
+            result.add(crew);
+            index = (index + 1) % crews.size();
         }
         return result;
     }
 
-    private String getNextName(List<String> names, String prevName) {
-        String name = names.get(0);
-        if (name.equals(prevName)) {
-            swapFirstTwoElements(names);
+    private Crew getNextCrew(List<Crew> crews, Crew previousCrew) {
+        Crew crew = crews.get(0);
+        if (crew.equals(previousCrew)) {
+            swapFirstTwoCrews(crews);
         }
-        return names.remove(0);
+        return crews.remove(0);
     }
 
-    private void swapFirstTwoElements(List<String> list) {
-        if (list == null || list.size() <= 1) {
+    private void swapFirstTwoCrews(List<Crew> crews) {
+        if (crews == null || crews.size() <= 1) {
             throw new IllegalArgumentException("비상 근무일을 배치할 수 없습니다.");
         }
-        String temp = list.get(0);
-        list.set(0, list.get(1));
-        list.set(1, temp);
+        Crew temp = crews.get(0);
+        crews.set(0, crews.get(1));
+        crews.set(1, temp);
     }
 }
